@@ -1,46 +1,127 @@
-/*
- * main.cpp
- *
- *  Created on: 22 may 2023
- *      Author: xabic
- */
-/*
- * main.cpp
- *
- *  Created on: 22 may 2023
- *      Author: Usuario
- */
+
 #include <stdio.h>
 #include <winsock2.h>
+#include "cliente.h"
 
 #define SERVER_IP "127.0.0.1"
 #define SERVER_PORT 6000
+WSADATA wsaData;
+SOCKET s;
+struct sockaddr_in server;
+char sendBuff[512], recvBuff[512];
 
-char menu()
-{
+char menuSesion(){
 	printf("\n");
-	printf("Elige la OPCION que desees: \n");
-	printf("1. Sumar (2 + 3 + 5) \n");
-	printf("2. Raiz cuadrada (9) \n");
-	printf("3. Obtener IP del servidor \n");
-	printf("4. Salir \n\n");
+	printf("Elige una OPCION: \n");
+	printf("1. Iniciar Sesión \n");
+	printf("2. Salir \n");
 	printf("Opcion: ");
 	fflush(stdout);
 	char opcion = getchar();
 
-	char c; while ((c = getchar()) != '\n' && c != EOF); // Vacía el buffer de entrada
+	char c; while ((c = getchar()) != '\n' && c != EOF);
 
 	return opcion;
+}
+char menuPrincipal(){
+	printf("\n");
+	printf("Elige una OPCION: \n");
+	printf("1. VerPelis \n");
+	printf("2. Comprar \n");
+	printf("3. Salir \n");
+	printf("Opcion: ");
+	fflush(stdout);
+	char opcion = getchar();
+
+	char c; while ((c = getchar()) != '\n' && c != EOF);
+
+	return opcion;
+}
+
+char* escribirNombre(){
+	printf("Escribe tu nombre: \n");
+	fflush(stdout);
+	char* opcion = new char[20];
+	scanf("%s", opcion);
+	return opcion;
+}
+char* escribirContra(){
+	printf("Escribe tu contra: \n");
+	fflush(stdout);
+	char* opcion = new char[20];
+	scanf("%s", opcion);
+	return opcion;
+}
+
+void menu(){
+	char c;
+		do
+		{
+			c = menuPrincipal();
+			if (c == '1')
+			{
+				// SENDING command SUMAR and parameters to the server
+				strcpy(sendBuff, "SUMAR");
+				send(s, sendBuff, sizeof(sendBuff), 0);
+				strcpy(sendBuff, "2");
+				send(s, sendBuff, sizeof(sendBuff), 0);
+				strcpy(sendBuff, "3");
+				send(s, sendBuff, sizeof(sendBuff), 0);
+				strcpy(sendBuff, "5");
+				send(s, sendBuff, sizeof(sendBuff), 0);
+				strcpy(sendBuff, "SUMAR-END");
+				send(s, sendBuff, sizeof(sendBuff), 0);
+
+				// RECEIVING response to command SUMAR from the server
+				recv(s, recvBuff, sizeof(recvBuff), 0);
+				printf("Suma = %s \n", recvBuff);
+				fflush(stdout);
+			}
+
+			if (c == '2')
+			{
+				// SENDING command RAIZ and parameter to the server
+				strcpy(sendBuff, "RAIZ");
+				send(s, sendBuff, sizeof(sendBuff), 0);
+				strcpy(sendBuff, "9");
+				send(s, sendBuff, sizeof(sendBuff), 0);
+				strcpy(sendBuff, "RAIZ-END");
+				send(s, sendBuff, sizeof(sendBuff), 0);
+
+				// RECEIVING response to command RAIZ from the server
+				recv(s, recvBuff, sizeof(recvBuff), 0);
+				printf("Raiz cuadrada = %s \n", recvBuff);
+				fflush(stdout);
+			}
+
+			if (c == '3')
+			{
+				// SENDING command IP
+				strcpy(sendBuff, "IP");
+				send(s, sendBuff, sizeof(sendBuff), 0);
+				strcpy(sendBuff, "IP-END");
+				send(s, sendBuff, sizeof(sendBuff), 0);
+
+				// RECEIVING response to command IP from the server
+				recv(s, recvBuff, sizeof(recvBuff), 0);
+				printf("IP del servidor = %s \n", recvBuff);
+				fflush(stdout);
+			}
+
+			if (c == '4')
+			{
+				// SENDING command EXIT
+				strcpy(sendBuff, "EXIT");
+				send(s, sendBuff, sizeof(sendBuff), 0);
+			}
+		}while(c != '4');
 }
 
 
 int main(int argc, char *argv[])
 {
 
-	WSADATA wsaData;
-	SOCKET s;
-	struct sockaddr_in server;
-	char sendBuff[512], recvBuff[512];
+
 
 	printf("\nInitialising Winsock...\n");
 	fflush(stdout);
@@ -81,67 +162,57 @@ int main(int argc, char *argv[])
 			ntohs(server.sin_port));
 	fflush(stdout);
 	//SEND and RECEIVE data (CLIENT/SERVER PROTOCOL)
-	char c;
-	do
-	{
-		c = menu();
-		if (c == '1')
+	char d;
+	char* n;
+	char* h;
+		do
 		{
-			// SENDING command SUMAR and parameters to the server
-			strcpy(sendBuff, "SUMAR");
-			send(s, sendBuff, sizeof(sendBuff), 0);
-			strcpy(sendBuff, "2");
-			send(s, sendBuff, sizeof(sendBuff), 0);
-			strcpy(sendBuff, "3");
-			send(s, sendBuff, sizeof(sendBuff), 0);
-			strcpy(sendBuff, "5");
-			send(s, sendBuff, sizeof(sendBuff), 0);
-			strcpy(sendBuff, "SUMAR-END");
-			send(s, sendBuff, sizeof(sendBuff), 0);
+			d = menuSesion();
+			if (d == '1')
+			{
+				// SENDING command SUMAR and parameters to the server
+				strcpy(sendBuff, "INICIARSESION");
+				send(s, sendBuff, sizeof(sendBuff), 0);
+				n=escribirNombre();
+				strcpy(sendBuff, n);
+				send(s, sendBuff, sizeof(sendBuff), 0);
+				h=escribirContra();
+				strcpy(sendBuff, h);
+				send(s, sendBuff, sizeof(sendBuff), 0);
+				strcpy(sendBuff, "SESIONEND");
+				send(s, sendBuff, sizeof(sendBuff), 0);
 
-			// RECEIVING response to command SUMAR from the server
-			recv(s, recvBuff, sizeof(recvBuff), 0);
-			printf("Suma = %s \n", recvBuff);
-			fflush(stdout);
-		}
+				// RECEIVING response to command SUMAR from the server
+				recv(s, recvBuff, sizeof(recvBuff), 0);
+				printf("Response enviadda: %s \n", recvBuff);
+				if(strcmp(recvBuff, "1")==0){
+					printf("El usuario es correcto\n");
+					menu();
+				} else {
+					printf("El usuario es incorrecto\n");
+				}
 
-		if (c == '2')
-		{
-			// SENDING command RAIZ and parameter to the server
-			strcpy(sendBuff, "RAIZ");
-			send(s, sendBuff, sizeof(sendBuff), 0);
-			strcpy(sendBuff, "9");
-			send(s, sendBuff, sizeof(sendBuff), 0);
-			strcpy(sendBuff, "RAIZ-END");
-			send(s, sendBuff, sizeof(sendBuff), 0);
+				fflush(stdout);
+			}
 
-			// RECEIVING response to command RAIZ from the server
-			recv(s, recvBuff, sizeof(recvBuff), 0);
-			printf("Raiz cuadrada = %s \n", recvBuff);
-			fflush(stdout);
-		}
 
-		if (c == '3')
-		{
-			// SENDING command IP
-			strcpy(sendBuff, "IP");
-			send(s, sendBuff, sizeof(sendBuff), 0);
-			strcpy(sendBuff, "IP-END");
-			send(s, sendBuff, sizeof(sendBuff), 0);
+			if (d == '2')
+			{
+				// SENDING command EXIT
+				strcpy(sendBuff, "EXIT");
+				send(s, sendBuff, sizeof(sendBuff), 0);
+			}
+		}while(d != '2');
 
-			// RECEIVING response to command IP from the server
-			recv(s, recvBuff, sizeof(recvBuff), 0);
-			printf("IP del servidor = %s \n", recvBuff);
-			fflush(stdout);
-		}
+		// CLOSING the socket and cleaning Winsock...
+		closesocket(s);
+		WSACleanup();
 
-		if (c == '4')
-		{
-			// SENDING command EXIT
-			strcpy(sendBuff, "EXIT");
-			send(s, sendBuff, sizeof(sendBuff), 0);
-		}
-	}while(c != '4');
+		return 0;
+
+
+
+
 
 	// CLOSING the socket and cleaning Winsock...
 	closesocket(s);
