@@ -76,33 +76,36 @@ void menu(){
 				recv(s, recvBuff, sizeof(recvBuff), 0);
 				int numP = atoi(recvBuff);
 				Pelicula* listaPelis = new Pelicula[numP];
-				int id_pelicula;
-				char *titulo;
-				char *genero;
-				char *director;
-				char *formato;
-				float precio;
-				int cantidad;
+//				int id_pelicula;
+//				char *titulo;
+//				char *genero;
+//				char *director;
+//				char *formato;
+//				float precio;
+//				int cantidad;
 				for (int i = 0; i < numP; ++i) {
 					recv(s, recvBuff, sizeof(recvBuff), 0);
-					id_pelicula=atoi(recvBuff);
+					int id_pelicula=atoi(recvBuff);
 					recv(s, recvBuff, sizeof(recvBuff), 0);
-					titulo=recvBuff;
+					char* titulo = recvBuff;
+//					printf("titulo = %s \n", titulo);
 					recv(s, recvBuff, sizeof(recvBuff), 0);
-					genero=recvBuff;
+					char* genero=recvBuff;
+//					printf("genero = %s \n", genero);
+//					printf("titulo = %s \n", titulo);
+
 					recv(s, recvBuff, sizeof(recvBuff), 0);
-					director=recvBuff;
+					char* director=recvBuff;
 					recv(s, recvBuff, sizeof(recvBuff), 0);
-					formato=recvBuff;
+					char* formato=recvBuff;
 					recv(s, recvBuff, sizeof(recvBuff), 0);
-					precio=atof(recvBuff);
+					float precio=atof(recvBuff);
 					recv(s, recvBuff, sizeof(recvBuff), 0);
-					cantidad=atoi(recvBuff);
+					int cantidad=atoi(recvBuff);
 					Pelicula peli(id_pelicula, titulo, genero, director, formato, precio, cantidad);
 					listaPelis[i]=peli;
 					peli.imprimirPeli();
 				}
-				printf("Suma = %s \n", recvBuff);
 				fflush(stdout);
 			}
 
