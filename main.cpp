@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <winsock2.h>
 #include "cliente.h"
+#include "Pelicula.h"
+
 
 #define SERVER_IP "127.0.0.1"
 #define SERVER_PORT 6000
@@ -61,19 +63,41 @@ void menu(){
 			if (c == '1')
 			{
 				// SENDING command SUMAR and parameters to the server
-				strcpy(sendBuff, "SUMAR");
+				strcpy(sendBuff, "VERPELIS");
 				send(s, sendBuff, sizeof(sendBuff), 0);
-				strcpy(sendBuff, "2");
-				send(s, sendBuff, sizeof(sendBuff), 0);
-				strcpy(sendBuff, "3");
-				send(s, sendBuff, sizeof(sendBuff), 0);
-				strcpy(sendBuff, "5");
-				send(s, sendBuff, sizeof(sendBuff), 0);
-				strcpy(sendBuff, "SUMAR-END");
+				strcpy(sendBuff, "VERPELISEND");
 				send(s, sendBuff, sizeof(sendBuff), 0);
 
 				// RECEIVING response to command SUMAR from the server
 				recv(s, recvBuff, sizeof(recvBuff), 0);
+				int numP = atoi(recvBuff);
+				Pelicula* listaPelis = new Pelicula[numP];
+				int id_pelicula;
+				char *titulo;
+				char *genero;
+				char *director;
+				char *formato;
+				float precio;
+				int cantidad;
+				for (int i = 0; i < numP; ++i) {
+					recv(s, recvBuff, sizeof(recvBuff), 0);
+					id_pelicula=atoi(recvBuff);
+					recv(s, recvBuff, sizeof(recvBuff), 0);
+					titulo=recvBuff;
+					recv(s, recvBuff, sizeof(recvBuff), 0);
+					genero=recvBuff;
+					recv(s, recvBuff, sizeof(recvBuff), 0);
+					director=recvBuff;
+					recv(s, recvBuff, sizeof(recvBuff), 0);
+					formato=recvBuff;
+					recv(s, recvBuff, sizeof(recvBuff), 0);
+					precio=atof(recvBuff);
+					recv(s, recvBuff, sizeof(recvBuff), 0);
+					cantidad=atoi(recvBuff);
+					Pelicula peli(id_pelicula, titulo, genero, director, formato, precio, cantidad);
+					listaPelis[i]=peli;
+					peli.imprimirPeli();
+				}
 				printf("Suma = %s \n", recvBuff);
 				fflush(stdout);
 			}
