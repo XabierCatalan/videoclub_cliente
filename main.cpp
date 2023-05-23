@@ -37,6 +37,8 @@ char menuPrincipal(){
 
 	char c; while ((c = getchar()) != '\n' && c != EOF);
 
+	printf("la opcion elegida es : %c \n", opcion);
+
 	return opcion;
 }
 
@@ -57,9 +59,11 @@ char* escribirContra(){
 
 void menu(){
 	char c;
+
 		do
 		{
 			c = menuPrincipal();
+			printf("c == %c \n", c);
 			if (c == '1')
 			{
 				// SENDING command SUMAR and parameters to the server
@@ -189,6 +193,7 @@ int main(int argc, char *argv[])
 	char d;
 	char* n;
 	char* h;
+	int inicio = 0;
 		do
 		{
 			d = menuSesion();
@@ -211,7 +216,13 @@ int main(int argc, char *argv[])
 				printf("Response enviadda: %s \n", recvBuff);
 				if(strcmp(recvBuff, "1")==0){
 					printf("El usuario es correcto\n");
-					menu();
+					inicio = 1;
+					d = '2';
+					int vacio = getchar();
+
+
+
+
 				} else {
 					printf("El usuario es incorrecto\n");
 				}
@@ -226,7 +237,15 @@ int main(int argc, char *argv[])
 				strcpy(sendBuff, "EXIT");
 				send(s, sendBuff, sizeof(sendBuff), 0);
 			}
-		}while(d != '2');
+
+
+
+
+		}while(d != '2' );
+
+		if(inicio == 1 && d == '2'){
+			menu();
+		}
 
 		// CLOSING the socket and cleaning Winsock...
 		closesocket(s);
