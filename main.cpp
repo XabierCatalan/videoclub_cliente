@@ -86,20 +86,30 @@ void menu(){
 				for (int i = 0; i < numP; ++i) {
 					recv(s, recvBuff, sizeof(recvBuff), 0);
 					int id_pelicula=atoi(recvBuff);
+
 					recv(s, recvBuff, sizeof(recvBuff), 0);
-					char* titulo = recvBuff;
+					char* titulo = new char[strlen(recvBuff) + 1];
+					strcpy(titulo,recvBuff);
+
 //					printf("titulo = %s \n", titulo);
 					recv(s, recvBuff, sizeof(recvBuff), 0);
-					char* genero=recvBuff;
+					char* genero= new char[strlen(recvBuff) + 1];;
+					strcpy(genero,recvBuff);
+
 //					printf("genero = %s \n", genero);
 //					printf("titulo = %s \n", titulo);
 
 					recv(s, recvBuff, sizeof(recvBuff), 0);
-					char* director=recvBuff;
+					char* director= new char[strlen(recvBuff) + 1];;
+					strcpy(director,recvBuff);
+
 					recv(s, recvBuff, sizeof(recvBuff), 0);
-					char* formato=recvBuff;
+					char* formato= new char[strlen(recvBuff) + 1];;
+					strcpy(formato,recvBuff);
+
 					recv(s, recvBuff, sizeof(recvBuff), 0);
 					float precio=atof(recvBuff);
+
 					recv(s, recvBuff, sizeof(recvBuff), 0);
 					int cantidad=atoi(recvBuff);
 					Pelicula peli(id_pelicula, titulo, genero, director, formato, precio, cantidad);
