@@ -30,8 +30,9 @@ char menuPrincipal(){
 	printf("Elige una OPCION: \n");
 	printf("1. VerPelis \n");
 	printf("2. Comprar \n");
-	printf("3. Saldo \n");
-	printf("4. Salir \n");
+	printf("3. Mostrar saldo \n");
+	printf("4. Sumar saldo \n");
+	printf("5. Salir \n");
 	printf("Opcion: ");
 	fflush(stdout);
 	char opcion = getchar();
@@ -140,7 +141,7 @@ void menu(){
 
 			if (c == '2')
 			{
-				// SENDING command RAIZ and parameter to the server
+
 				strcpy(sendBuff, "COMPRARPELIS");
 				send(s, sendBuff, sizeof(sendBuff), 0);
 
@@ -154,33 +155,54 @@ void menu(){
 				strcpy(sendBuff, "COMPRARPELISEND");
 				send(s, sendBuff, sizeof(sendBuff), 0);
 
-				// RECEIVING response to command RAIZ from the server
+
 				recv(s, recvBuff, sizeof(recvBuff), 0);
-				printf("Raiz cuadrada = %s \n", recvBuff);
+				char* respuesta= new char[strlen(recvBuff) + 1];;
+				strcpy(respuesta,recvBuff);
+
+				printf("%s \n", respuesta);
 				fflush(stdout);
 			}
 
 			if (c == '3')
 			{
 				// SENDING command IP
-				strcpy(sendBuff, "IP");
+				strcpy(sendBuff, "MOSTRARSALDO");
 				send(s, sendBuff, sizeof(sendBuff), 0);
-				strcpy(sendBuff, "IP-END");
+				strcpy(sendBuff, "MOSTRARSALDOEND");
 				send(s, sendBuff, sizeof(sendBuff), 0);
 
 				// RECEIVING response to command IP from the server
 				recv(s, recvBuff, sizeof(recvBuff), 0);
-				printf("IP del servidor = %s \n", recvBuff);
+				float saldoActual=atof(recvBuff);
+
+				printf("Saldo actual de la cuenta  = %.2f euros \n", saldoActual);
 				fflush(stdout);
 			}
 
 			if (c == '4')
 			{
+				// SENDING command IP
+				strcpy(sendBuff, "SUMARSALDO");
+				send(s, sendBuff, sizeof(sendBuff), 0);
+				strcpy(sendBuff, "SUMARSALDOEND");
+				send(s, sendBuff, sizeof(sendBuff), 0);
+
+				// RECEIVING response to command IP from the server
+				recv(s, recvBuff, sizeof(recvBuff), 0);
+				float saldoActual=atof(recvBuff);
+
+				printf("Saldo actual de la cuenta  = %.2f euros \n", saldoActual);
+				fflush(stdout);
+						}
+
+			if (c == '5')
+			{
 				// SENDING command EXIT
 				strcpy(sendBuff, "EXIT");
 				send(s, sendBuff, sizeof(sendBuff), 0);
 			}
-		}while(c != '4');
+		}while(c != '5');
 }
 
 
