@@ -14,6 +14,7 @@ Cliente::Cliente() {
 	nombre=NULL;
 	mail=NULL;
 	contra=NULL;
+	this->saldo=0;
 
 }
 

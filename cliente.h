@@ -14,6 +14,7 @@ private:
 	char* nombre;
 	char* mail;
 	char* contra;
+	float saldo;
 public:
 	Cliente();
 	virtual ~Cliente();
