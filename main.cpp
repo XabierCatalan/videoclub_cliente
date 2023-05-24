@@ -124,6 +124,7 @@ void menu(){
 					char* titulo = new char[strlen(recvBuff) + 1];
 					strcpy(titulo,recvBuff);
 
+
 					recv(s, recvBuff, sizeof(recvBuff), 0);
 					char* genero= new char[strlen(recvBuff) + 1];;
 					strcpy(genero,recvBuff);
@@ -145,6 +146,14 @@ void menu(){
 					Pelicula peli(id_pelicula, titulo, genero, director, formato, precio, cantidad);
 					listaPelis[i]=peli;
 					peli.imprimirPeli();
+
+					delete[] titulo;
+					delete[] genero;
+					delete[] director;
+					delete[] formato;
+
+
+
 				}
 				fflush(stdout);
 			}
