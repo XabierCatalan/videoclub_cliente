@@ -160,7 +160,7 @@ void menu(){
 				char* respuesta= new char[strlen(recvBuff) + 1];;
 				strcpy(respuesta,recvBuff);
 
-				printf("%s \n", respuesta);
+				printf("r= %s \n", respuesta);
 				fflush(stdout);
 			}
 
