@@ -30,7 +30,8 @@ char menuPrincipal(){
 	printf("Elige una OPCION: \n");
 	printf("1. VerPelis \n");
 	printf("2. Comprar \n");
-	printf("3. Salir \n");
+	printf("3. Saldo \n");
+	printf("4. Salir \n");
 	printf("Opcion: ");
 	fflush(stdout);
 	char opcion = getchar();
@@ -57,8 +58,29 @@ char* escribirContra(){
 	return opcion;
 }
 
+char* escribirIdPelicula(){
+
+	printf("Escribe el id de la pelicula que desea comprar: \n");
+	fflush(stdout);
+	char* opcion = new char[20];
+	scanf("%s", opcion);
+	return opcion;
+
+}
+
+char* escribirCantidadPelicula(){
+	printf("Escribe la cantidad de peliculas que desea comprar: \n");
+	fflush(stdout);
+	char* opcion = new char[20];
+	scanf("%s", opcion);
+	return opcion;
+
+}
 void menu(){
 	char c;
+
+	char* cant;
+	char* identif;
 
 		do
 		{
@@ -91,13 +113,10 @@ void menu(){
 					char* titulo = new char[strlen(recvBuff) + 1];
 					strcpy(titulo,recvBuff);
 
-//					printf("titulo = %s \n", titulo);
 					recv(s, recvBuff, sizeof(recvBuff), 0);
 					char* genero= new char[strlen(recvBuff) + 1];;
 					strcpy(genero,recvBuff);
 
-//					printf("genero = %s \n", genero);
-//					printf("titulo = %s \n", titulo);
 
 					recv(s, recvBuff, sizeof(recvBuff), 0);
 					char* director= new char[strlen(recvBuff) + 1];;
@@ -122,11 +141,17 @@ void menu(){
 			if (c == '2')
 			{
 				// SENDING command RAIZ and parameter to the server
-				strcpy(sendBuff, "RAIZ");
+				strcpy(sendBuff, "COMPRARPELIS");
 				send(s, sendBuff, sizeof(sendBuff), 0);
-				strcpy(sendBuff, "9");
+
+				identif=escribirIdPelicula();
+				strcpy(sendBuff, identif);
 				send(s, sendBuff, sizeof(sendBuff), 0);
-				strcpy(sendBuff, "RAIZ-END");
+				cant=escribirCantidadPelicula();
+				strcpy(sendBuff, cant);
+				send(s, sendBuff, sizeof(sendBuff), 0);
+
+				strcpy(sendBuff, "COMPRARPELISEND");
 				send(s, sendBuff, sizeof(sendBuff), 0);
 
 				// RECEIVING response to command RAIZ from the server
