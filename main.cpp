@@ -38,7 +38,7 @@ char menuPrincipal(){
 
 	char c; while ((c = getchar()) != '\n' && c != EOF);
 
-	printf("la opcion elegida es : %c \n", opcion);
+
 
 	return opcion;
 }
@@ -85,7 +85,7 @@ void menu(){
 		do
 		{
 			c = menuPrincipal();
-			printf("c == %c \n", c);
+
 			if (c == '1')
 			{
 				// SENDING command SUMAR and parameters to the server
