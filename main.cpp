@@ -77,11 +77,21 @@ char* escribirCantidadPelicula(){
 	return opcion;
 
 }
+
+char* escribirNuevoSaldo(){
+	printf("Cuanto saldo quieres ingresar?: \n");
+	fflush(stdout);
+	char* opcion = new char[20];
+	scanf("%s", opcion);
+	return opcion;
+}
+
 void menu(){
 	char c;
 
 	char* cant;
 	char* identif;
+	char* saldoN;
 
 		do
 		{
@@ -185,14 +195,19 @@ void menu(){
 				// SENDING command IP
 				strcpy(sendBuff, "SUMARSALDO");
 				send(s, sendBuff, sizeof(sendBuff), 0);
+
+				saldoN = escribirNuevoSaldo();
+				strcpy(sendBuff, saldoN);
+				send(s, sendBuff, sizeof(sendBuff), 0);
+
 				strcpy(sendBuff, "SUMARSALDOEND");
 				send(s, sendBuff, sizeof(sendBuff), 0);
 
 				// RECEIVING response to command IP from the server
 				recv(s, recvBuff, sizeof(recvBuff), 0);
-				float saldoActual=atof(recvBuff);
+				float saldoNuevo= atof(recvBuff);
 
-				printf("Saldo actual de la cuenta  = %.2f euros \n", saldoActual);
+				printf("Nuevo saldo = %.2f euros \n", saldoNuevo);
 				fflush(stdout);
 						}
 
